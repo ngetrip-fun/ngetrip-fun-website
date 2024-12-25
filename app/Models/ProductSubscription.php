@@ -16,10 +16,11 @@ class ProductSubscription extends Model
      * @var mixed|string
      */
     protected $fillable = [
+        'name',
         'email', 'proof', 'booking_trx_id', 'total_amount',
         'total_tax_amount', 'price', 'duration', 'is_paid',
         'customer_bank_name', 'customer_bank_number', 'customer_bank_account',
-        'product_id'
+        'product_id', 'phone'
     ];
 
     public function product(): BelongsTo
