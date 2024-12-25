@@ -12,6 +12,9 @@ class ProductSubscription extends Model
 {
     use HasFactory, SoftDeletes;
 
+    /**
+     * @var mixed|string
+     */
     protected $fillable = [
         'email', 'proof', 'booking_trx_id', 'total_amount',
         'total_tax_amount', 'price', 'duration', 'is_paid',
