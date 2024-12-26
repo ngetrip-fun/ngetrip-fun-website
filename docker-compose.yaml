@@ -1,19 +1,90 @@
-version: '3'
-services:
-  db:
-    image: mysql
-    env_file: .env
-    environment:
-        MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-        MYSQL_DATABASE: ${DB_DATABASE}
-        MYSQL_USER: ${DB_USERNAME}
-        MYSQL_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - '3306:3306'
-    expose:
-      - '3306'
-    volumes:
-      - ngetripfun-db:/var/lib/mysql
+version: "3.7"
 
-volumes:
-  ngetripfun-db:
+services:
+
+  ####################################################################################################
+  # app
+  ####################################################################################################
+  app:
+    build:
+      args:
+        user: developer
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: app
+    container_name: ngetripfun-laravel
+    restart: unless-stopped
+    environment:
+      VIRTUAL_HOST: laravel.test
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+      - ~/.ssh:/root/.ssh
+    depends_on:
+      - db
+    networks:
+      - laravel
+
+  ####################################################################################################
+  # DATABASE (MySQL)
+  ####################################################################################################
+  db:
+    image: mysql:8.0
+    container_name: ngetripfun-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker-compose/mysql/data:/var/lib/mysql
+      - ./docker-compose/mysql/logs:/var/log/mysql
+      - ./docker-compose/mysql/ql:/docker-entrypoint-initdb.d
+    networks:
+      - laravel
+  ####################################################################################################
+  # Nginx
+  ####################################################################################################
+  nginx:
+    image: nginx:alpine
+    container_name: ngetripfun-nginx
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d
+      - ./docker-compose/nginx/ssl:/etc/nginx/conf.d/ssl
+      - /var/www/public:/usr/share/nginx/html:delegated
+    networks:
+      - laravel
+
+    # phpMyAdmin
+    ####################################################################################################
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: ngetripfun-phpmyadmin
+    ports:
+      - 8080:80
+    links:
+        - db
+    restart: unless-stopped
+    environment:
+      PMA_HOST: db
+      #PMA_USER: ${DB_USERNAME}
+      #PMA_PASSWORD: ${DB_PASSWORD}
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    networks:
+      - laravel
+
+networks:
+  laravel:
+    driver: bridge
