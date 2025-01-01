@@ -99,20 +99,24 @@ class BookingService
         }
 
         $group = GroupParticipant::where('booking_trx_id', $bookingDetails->booking_trx_id)->first();
+        $totalParticipant = null;
         $subscriptionGroup = null;
-
         if($group) {
             $subscriptionGroup = $group->subscriptionGroup()
                 ->with(['groupParticipants', 'groupMessages'])
                 ->first();
+            $totalParticipant = $subscriptionGroup->groupParticipants->count() ?? 0;
         }
 
         $productCapacity = $bookingDetails->product->capacity ?? 0;
+        $remainingSlots = $productCapacity - $totalParticipant;
 
         return [
             'bookingDetails' => $bookingDetails,
             'subscriptionGroup' => $subscriptionGroup,
-            'productCapacity' => $productCapacity
+            'productCapacity' => $productCapacity,
+            'totalParticipant' => $totalParticipant,
+            'remainingSlots' => $remainingSlots,
         ];
     }
 }

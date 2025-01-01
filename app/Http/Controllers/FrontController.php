@@ -23,6 +23,10 @@ class FrontController extends Controller
 
     public function details(Product $product)
     {
-        return view('front.details', compact('product'));
+        $tax = 0.12;
+        $price = $product->price_per_person;
+        $totalTaxAmount = $price * $tax;
+        $totalAmount = $price + $totalTaxAmount;
+        return view('front.details', compact('product', 'totalAmount', 'totalTaxAmount'));
     }
 }
