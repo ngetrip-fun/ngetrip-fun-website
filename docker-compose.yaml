@@ -8,15 +8,13 @@ services:
   app:
     build:
       args:
-        user: developer
-        uid: 1000
-      context: ./
+        user: novin
+        uid: ${UID}
+        gid: ${GID}
+      context: .
       dockerfile: Dockerfile
-    image: app
     container_name: ngetripfun-laravel
     restart: unless-stopped
-    environment:
-      VIRTUAL_HOST: laravel.test
     working_dir: /var/www/
     volumes:
       - ./:/var/www
@@ -25,6 +23,7 @@ services:
       - db
     networks:
       - laravel
+    command: php artisan serve --host=0.0.0.0 --port=8000
 
   ####################################################################################################
   # DATABASE (MySQL)
@@ -75,11 +74,10 @@ services:
       - 8080:80
     links:
         - db
-    restart: unless-stopped
     environment:
       PMA_HOST: db
-      #PMA_USER: ${DB_USERNAME}
-      #PMA_PASSWORD: ${DB_PASSWORD}
+      PMA_USER: ${DB_USERNAME}
+      PMA_PASSWORD: ${DB_PASSWORD}
       PMA_PORT: 3306
       PMA_ARBITRARY: 1
     networks:
