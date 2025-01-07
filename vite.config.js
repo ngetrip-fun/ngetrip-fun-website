@@ -7,7 +7,7 @@ export default defineConfig({
             input: ['resources/css/app.css', 'resources/js/app.js'],
             refresh: [
                 ...refreshPaths,
-                'app/Filament/Resources/**/*.php',
+                'app/Filament/**',
                 'public/css/**/**/*.css',
                 'public/js/**/**/*.js',
                 'public/js/*.js'
