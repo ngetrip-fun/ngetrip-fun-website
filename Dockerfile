@@ -27,21 +27,4 @@ RUN mkdir -p /home/$user/.composer && \
 WORKDIR /var/www
 RUN chown -R $user:$user /var/www
 
-RUN php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan view:cache && \
-    php artisan optimize && \
-    php artisan event:cache
-
 USER $user
-
-
-#FROM php:8.0.5
-#RUN apt-get update -y && apt-get install -y openssl zip unzip git
-#RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-#RUN docker-php-ext-install pdo_mysql
-#WORKDIR /app
-#COPY . /app
-#RUN composer install --optimize-autoloader --no-dev
-#CMD php artisan serve
-#EXPOSE $PORT

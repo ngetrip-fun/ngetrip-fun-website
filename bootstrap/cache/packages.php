@@ -20,17 +20,6 @@
       0 => 'BladeUI\\Icons\\BladeIconsServiceProvider',
     ),
   ),
-  'dotswan/filament-laravel-pulse' => 
-  array (
-    'aliases' => 
-    array (
-      'FilamentLaravelPulse' => 'Dotswan\\FilamentLaravelPulse\\Facades\\FilamentLaravelPulse',
-    ),
-    'providers' => 
-    array (
-      0 => 'Dotswan\\FilamentLaravelPulse\\FilamentLaravelPulseServiceProvider',
-    ),
-  ),
   'filament/actions' => 
   array (
     'providers' => 
@@ -99,17 +88,6 @@
     'providers' => 
     array (
       0 => 'Laravel\\Pail\\PailServiceProvider',
-    ),
-  ),
-  'laravel/pulse' => 
-  array (
-    'aliases' => 
-    array (
-      'Pulse' => 'Laravel\\Pulse\\Facades\\Pulse',
-    ),
-    'providers' => 
-    array (
-      0 => 'Laravel\\Pulse\\PulseServiceProvider',
     ),
   ),
   'laravel/sail' => 
