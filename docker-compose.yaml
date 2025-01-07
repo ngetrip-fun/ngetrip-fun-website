@@ -23,7 +23,6 @@ services:
       - db
     networks:
       - laravel
-    command: php artisan serve --host=0.0.0.0 --port=8000
 
   ####################################################################################################
   # DATABASE (MySQL)
